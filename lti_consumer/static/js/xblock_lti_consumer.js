@@ -168,10 +168,14 @@ function LtiConsumerXBlock(runtime, element) {
         var askToSendUsername = $ltiContainer.data('ask-to-send-username') == 'True';
         var askToSendFullName = $ltiContainer.data('ask-to-send-full-name') == 'True';
         var askToSendEmail = $ltiContainer.data('ask-to-send-email') == 'True';
+        var overrideConsentPrompt = $ltiContainer.data('override-consent-prompt') =='True';
         var ltiVersion = $ltiContainer.data('lti-version');
 
-        function renderPIIConsentPromptIfRequired(onSuccess, showCancelButton=true) {
-            if (askToSendUsername && askToSendFullName && askToSendEmail) {
+        function renderPIIConsentPromptIfRequired(onSuccess, showCancelButton = true) {
+            if (overrideConsentPrompt) {
+                onSuccess('OK');
+                return;
+            } else if (askToSendUsername && askToSendFullName && askToSendEmail) {
                 msg = gettext(
                     'Click OK to have your username, full name, and e-mail address sent to a 3rd party application.'
                 );

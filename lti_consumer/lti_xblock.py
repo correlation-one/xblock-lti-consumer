@@ -592,6 +592,12 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
         default=False,
         scope=Scope.settings
     )
+    override_consent_prompt= Boolean(
+        display_name=_("Override Consent Prompt"),
+        help=_("Select True to override the consent prompt."),
+        default=True,
+        scope=Scope.settings
+    )
 
     enable_processors = Boolean(
         display_name=_("Send extra parameters"),
@@ -617,6 +623,7 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
         'custom_parameters', 'launch_target', 'button_text', 'inline_height', 'modal_height',
         'modal_width', 'has_score', 'weight', 'hide_launch', 'accept_grades_past_due',
         'ask_to_send_username', 'ask_to_send_full_name', 'ask_to_send_email', 'enable_processors',
+        'override_consent_prompt',
     )
 
     # Author view
@@ -636,6 +643,7 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
                         description=""
                         ask_to_send_username="False"
                         ask_to_send_email="False"
+                        override_consent_prompt="False"
                         enable_processors="True"
                         launch_target="new_window"
                         launch_url="https://lti.tools/saltire/tp" />
@@ -645,6 +653,7 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
                         lti_id="test"
                         ask_to_send_username="False"
                         ask_to_send_email="False"
+                        override_consent_prompt="False"
                         enable_processors="True"
                         description=""
                         launch_target="iframe"
@@ -771,7 +780,7 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
         # editing of 'ask_to_send_username', 'ask_to_send_full_name', and 'ask_to_send_email'.
         pii_sharing_enabled = self.get_pii_sharing_enabled()
         if not pii_sharing_enabled:
-            noneditable_fields.extend(['ask_to_send_username', 'ask_to_send_full_name', 'ask_to_send_email'])
+            noneditable_fields.extend(['ask_to_send_username', 'ask_to_send_full_name', 'ask_to_send_email','override_consent_prompt'])
 
         editable_fields = tuple(
             field
@@ -1675,6 +1684,7 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
             'ask_to_send_username': self.ask_to_send_username if pii_sharing_enabled else False,
             'ask_to_send_full_name': self.ask_to_send_full_name if pii_sharing_enabled else False,
             'ask_to_send_email': self.ask_to_send_email if pii_sharing_enabled else False,
+            'override_consent_prompt': self.override_consent_prompt,
             'button_text': self.button_text,
             'inline_height': self.inline_height,
             'modal_vertical_offset': self._get_modal_position_offset(self.modal_height),
