@@ -594,7 +594,8 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
     )
     override_consent_prompt= Boolean(
         display_name=_("Override Consent Prompt"),
-        help=_("Select True to override the consent prompt."),
+        # Translators: This is used to hide the consent for PII.
+        help=_("Select True to override PII cosent prompt visibility and hide the screen."),
         default=True,
         scope=Scope.settings
     )
@@ -729,7 +730,8 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
             is_already_sharing_learner_info = (
                 self.ask_to_send_username or
                 self.ask_to_send_full_name or
-                self.ask_to_send_email
+                self.ask_to_send_email or 
+                self.override_consent_prompt
             )
             return config_service.configuration.lti_access_to_learners_editable(
                 self.scope_ids.usage_id.context_key,
@@ -1684,7 +1686,7 @@ class LtiConsumerXBlock(StudioEditableXBlockMixin, XBlock):
             'ask_to_send_username': self.ask_to_send_username if pii_sharing_enabled else False,
             'ask_to_send_full_name': self.ask_to_send_full_name if pii_sharing_enabled else False,
             'ask_to_send_email': self.ask_to_send_email if pii_sharing_enabled else False,
-            'override_consent_prompt': self.override_consent_prompt,
+            'override_consent_prompt': self.override_consent_prompt if pii_sharing_enabled else False,
             'button_text': self.button_text,
             'inline_height': self.inline_height,
             'modal_vertical_offset': self._get_modal_position_offset(self.modal_height),
